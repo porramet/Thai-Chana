@@ -3,27 +3,34 @@ import os
 import time
 import random
 pygame.font.init()
+from pygame import mixer
 
+pygame.mixer.pre_init()
+pygame.init()
 WIDTH, HEIGHT = 750,750 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("THAI CAHNA")
 
 # Load images
-enemy1 = pygame.image.load(os.path.join("assets", "pixel1.png"))
-enemy2 = pygame.image.load(os.path.join("assets", "pixel2.png"))
-enemy3 = pygame.image.load(os.path.join("assets", "pixel3.png"))
+enemy1 = pygame.image.load(os.path.join("assets/assets", "pixel1.png"))
+enemy2 = pygame.image.load(os.path.join("assets/assets", "pixel2.png"))
+enemy3 = pygame.image.load(os.path.join("assets/assets", "pixel3.png"))
 
 # Player player
-YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel0.png"))
+YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets/assets", "pixel0.png"))
 
 # Lasers
-LASER1 = pygame.image.load(os.path.join("assets", "pixel_laser1.png"))
-LASER2 = pygame.image.load(os.path.join("assets", "pixel_laser2.png"))
-LASER3 = pygame.image.load(os.path.join("assets", "pixel_laser3.png"))
-LASER4 = pygame.image.load(os.path.join("assets", "pixel_laser4.png"))
+LASER1 = pygame.image.load(os.path.join("assets/assets", "pixel_laser1.png"))
+LASER2 = pygame.image.load(os.path.join("assets/assets", "pixel_laser2.png"))
+LASER3 = pygame.image.load(os.path.join("assets/assets", "pixel_laser3.png"))
+LASER4 = pygame.image.load(os.path.join("assets/assets", "pixel_laser4.png"))
 
 # Background
-BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT))
+BG = pygame.transform.scale(pygame.image.load(os.path.join("assets/assets", "background-black.png")), (WIDTH, HEIGHT))
+
+#Sound
+pygame.mixer.music.load("music_bg (online-audio-converter.com).wav")
+pygame.mixer.music.play(0)
 
 class Laser:
     def __init__(self, x, y, img):
@@ -43,8 +50,7 @@ class Laser:
 
     def collision(self, obj):
         return collide(self, obj)
-
-
+        
 class Ship:
     COOLDOWN = 20
 
@@ -147,6 +153,8 @@ def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
     offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
+    
+    
 
 def main():
     run = True
@@ -226,6 +234,10 @@ def main():
             player.y += player_vel
         if keys[pygame.K_SPACE]:
             player.shoot()
+        if keys[pygame.K_SPACE]:
+            Sound = mixer.Sound("laser.wav")
+            Sound.play()
+        
 
         for enemy in enemies[:]:
             enemy.move(enemy_vel)
